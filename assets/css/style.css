@@ -37,6 +37,7 @@ input {
 .task .btn {
   background-color: #5c00c5;
   color: #fff;
+  margin-bottom: 5px;
 }
 
 .task .btn:hover {
@@ -49,8 +50,19 @@ input {
   text-decoration: line-through;
 }
 
+.task_adding>div>.col-lg {
+  margin-bottom: 1rem;
+}
+
+main>div:first-child {
+  padding: 0;
+}
+
 @media screen and (min-width: 994px) {
   .task>.row>.col-lg {
     text-align: right;
+  }
+  .task .btn {
+    margin: 0;
   }
 }
