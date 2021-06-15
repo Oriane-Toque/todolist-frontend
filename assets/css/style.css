@@ -1,0 +1,56 @@
+main {
+  margin: 2rem 1rem;
+}
+
+.task {
+  position: relative;
+  padding: 1rem;
+  margin-bottom: 2rem;
+  border: solid 1px #707070;
+}
+
+.task>.row>.col-lg {
+  text-align: left;
+}
+
+.task input {
+  border: none;
+}
+
+input {
+  max-width: 100%;
+}
+
+.progress {
+  padding: 0;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 0.5rem;
+}
+
+.progress-bar {
+  background-color: #dc00dc;
+  color: #fff;
+}
+
+.task .btn {
+  background-color: #5c00c5;
+  color: #fff;
+}
+
+.task .btn:hover {
+  background-color: #fff;
+  border: solid 1px #5c00c5;
+  color: #5c00c5;
+}
+
+.task_disable {
+  text-decoration: line-through;
+}
+
+@media screen and (min-width: 994px) {
+  .task>.row>.col-lg {
+    text-align: right;
+  }
+}
