@@ -54,6 +54,16 @@ input {
   margin-bottom: 1rem;
 }
 
+.task_archive .progress-bar {
+  background-color: #464646;
+  color: #fff;
+}
+
+.task_archive input {
+  color: #a1a1a1;
+  font-weight: 800;
+}
+
 main>div:first-child {
   padding: 0;
 }
