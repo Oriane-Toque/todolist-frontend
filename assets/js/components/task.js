@@ -84,6 +84,7 @@ const task = {
   },
 
   /**
+   * Méthode qui affiche la tâche complète
    * 
    * @param {*} evt 
    */
