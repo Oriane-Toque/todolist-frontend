@@ -17,6 +17,11 @@ const task = {
     taskTitleFieldElement.addEventListener('keydown', task.handleKeyDown);
     // on ajoute l'écoute si perte de focus
     taskTitleFieldElement.addEventListener('blur', task.handleValidateNewTask);
+
+    // je récupère le bouton completed de la tâche
+    const taskEndButton = taskElement.querySelector('.task__button--validate');
+    // on ajoute l'écoute du click sur le bouton
+    taskEndButton.addEventListener('click', task.handleCompleteTask);
   },
 
   /**
@@ -76,5 +81,14 @@ const task = {
 
     // je supprime la classe task--edit
     taskElement.classList.remove('task--edit');
+  },
+
+  /**
+   * 
+   * @param {*} evt 
+   */
+  handleCompleteTask: function(evt) {
+    // TODO
+    // console.log('tache terminée');
   }
 }
