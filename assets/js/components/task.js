@@ -88,7 +88,17 @@ const task = {
    * @param {*} evt 
    */
   handleCompleteTask: function(evt) {
-    // TODO
-    // console.log('tache terminée');
+
+    // je remonte à l'élément qui a capté l'évènement
+    const taskEndButton = evt.currentTarget;
+
+    // je remonte à l'élément parent de class task
+    const taskElement = taskEndButton.closest('.task');
+    
+    // je supprime la classe correspondant au modificateur "todo"
+    taskElement.classList.remove('task--todo');
+
+    // et j'ajoute la classe correspondant au modificateur "complete"
+    taskElement.classList.add('task--complete');
   }
 }
