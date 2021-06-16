@@ -18,6 +18,23 @@ const newTask = {
     // je stoppe le comportement par défaut du navigateur
     evt.preventDefault();
 
-    console.log('ajout tache');
+    // je récupère mon select
+    const selectCategoryNewTask = document.querySelector('.task--add select');
+    // je récupère l'index du <option> choisi
+    const choiceCategoryNewTask= selectCategoryNewTask.selectedIndex;
+    // je récupère la valeur soumise
+    const categoryValueNewTask = selectCategoryNewTask.options[choiceCategoryNewTask].value;
+
+
+    // je récupère mon input
+    const inputNameNewTask = document.querySelector('.task--add input');
+    // je récupère la valeur soumise
+    const nameValueNewTask = inputNameNewTask.value;
+
+    const templateNewTask = document.getElementById("taskTemplate");
+    const contentNewTask = templateNewTask.content.cloneNode(true);
+
+    // console.log(nameValueNewTask);
+    // console.log(categoryValueNewTask);
   }
 }
