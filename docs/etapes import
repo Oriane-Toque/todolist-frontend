@@ -1,0 +1,21 @@
+- a chaque début de cours pour livecoder je fais MA branche e0x-livecoding
+
+- une fois le cours terminé je fais IMPERATIVEMENT un 
+```
+git add . 
+```
+puis 
+```
+git commit -m "blabla"
+```
+Pour "accrocher" mon code a la branche livecoding
+
+- JE RETOURNE SUR LE MASTER
+```
+git checkout master
+```
+
+- je fais la commande 
+```
+sh import-external-repo.sh git@github.com:O-clock-Trinity/S07-TodoList.git fin-e01-prof-demo-import e01-prof-demo-import
+```
