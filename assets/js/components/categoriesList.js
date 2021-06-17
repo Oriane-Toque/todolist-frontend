@@ -4,14 +4,14 @@ const categoriesList = {
 
   init: function() {
 
-    categoriesList.loadCategoriesList();
+    categoriesList.loadCategoriesFromAPI();
   },
 
   /**
    * Methode qui récupère les données relatives aux catégories de l'API TodoList
    * 
    */
-  loadCategoriesList: function() {
+  loadCategoriesFromAPI: function() {
 
     let fetchOptions = {
       method: 'GET',
@@ -31,9 +31,48 @@ const categoriesList = {
       .then(
 
         function(objectCategoriesList) {
-          console.log(objectCategoriesList);
+          // console.log(objectCategoriesList);
+
+          // génère un select contenant la liste des catégories
+          categoriesList.displayCategoriesList(objectCategoriesList);
+
         }
       )
-  }
+  },
 
+  /**
+   * Méthode qui affiche la liste de catégories
+   * 
+   * @param {*} objectCategoriesList 
+   * @returns 
+   */
+  displayCategoriesList: function(objectCategoriesList) {
+
+
+    // je récupère mes balises qui doivent contenir mes listes déroulantes
+    const contentCategoriesList = document.querySelectorAll('.select');
+
+    // je boucle sur mes deux divs
+    for(const contentCategoryList of contentCategoriesList) { 
+        
+        // je crée un élément select pour mes 2 divs
+        const elementSelectList = document.createElement('select');   // je parcours mon tableau d'object
+        
+        // je boucle sur mon tableau d'objets contenant les catégories
+        for(const category of objectCategoriesList) {
+
+      
+        // crée une balise option à chaque tour de boucle
+        const elementOptionList = document.createElement('option');
+        // je lui affecte le nom de la catégorie
+        elementOptionList.textContent = category.name;
+          
+              
+        // puis j'ajoute à chaque tour de boucle option à son parent select
+        elementSelectList.appendChild(elementOptionList);
+        // j'ajoute au DOM mes selects
+        contentCategoryList.appendChild(elementSelectList);
+        }
+    }
+  },
 }
