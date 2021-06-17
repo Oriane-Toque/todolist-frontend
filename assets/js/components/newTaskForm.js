@@ -6,7 +6,9 @@ const newTaskForm = {
     newTaskForm.bindNewTaskFormEventListener();
   },
 
-  // ajout un  eventlistener liés au formulaire d'ajout d'une tâche
+  /**
+   * Méthode pour l'ajout d'un  eventlistener liés au formulaire d'ajout d'une tâche
+   */
   bindNewTaskFormEventListener: function(){
     // on récupère le formulaire d'ajout d'un" tache (le form qui est dans un element de classe task--add)
     const newTaskFormElement = document.querySelector('.task--add form');
@@ -15,6 +17,11 @@ const newTaskForm = {
 
   },
 
+  /**
+   * Méthode gérant la soumission du formulaire d'ajout de tâche
+   * 
+   * @param {*} evt 
+   */
   handleNewTaskFormSubmit: function(evt){
     // on empeche la page de se recharger :
     evt.preventDefault();
