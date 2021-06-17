@@ -41,6 +41,16 @@ const newTask = {
     // j'affecte le nom
     modelNewTitle.textContent = titleValueNewTask;
 
+    // je cible la catégorie
+    const modelNewCategory = modelNewTask.querySelector('.task__category p');
+    // j'affecte le nom
+    modelNewCategory.textContent = categoryValueNewTask;
+    // je veux aussi affecter aussi au data sur task donc je le cible
+    modelDataCategory = modelNewTask.querySelector('.task');
+    modelDataCategory.dataset.category = categoryValueNewTask;
+
+
+    console.log(modelNewTask);
     // insertion dans le DOM
     // avant le 1er enfant du parents
     document.querySelector('.tasks').prepend(modelNewTask);

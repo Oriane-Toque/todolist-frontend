@@ -95,7 +95,15 @@ const task = {
 
     // je remonte à l'élément parent de class task
     const taskElement = taskEndButton.closest('.task');
-    
+    task.markTaskAsComplete(taskElement);
+  },
+
+  /**
+   * Méthode qui valide une tâche
+   * 
+   * @param {*} taskElement 
+   */
+  markTaskAsComplete: function(taskElement) {
     // je supprime la classe correspondant au modificateur "todo"
     taskElement.classList.remove('task--todo');
 
