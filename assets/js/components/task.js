@@ -19,7 +19,12 @@ const task = {
     completeButtonElement.addEventListener('click', task.handleCompleteTask);
 
   },
-  // handler validation d'une tache
+  
+  /**
+   * Méthode qui valide la tâche
+   * 
+   * @param {*} evt 
+   */
   handleCompleteTask: function(evt){
     //alert('valider');
     // je cible le bouton sur lequel l'utilisateur a click
@@ -28,12 +33,24 @@ const task = {
     const taskElement = completeButtonElement.closest('.task');
     task.markTaskAsComplete(taskElement);
   },
-  // validation d'une tache
+
+  /**
+   * Méthode qui change la classe si validation de la tâche
+   * 
+   * @param {*} taskElement 
+   */
   markTaskAsComplete: function(taskElement){
     taskElement.classList.remove('task--todo');
     taskElement.classList.add('task--complete');
   },
   // Cette methode a pour objectif de masquer le p de la tache et afficher l'input
+
+  /**
+   * Méthode qui masque le paragraphe de la tache et affiche l'input
+   * Activation du mode d'édition
+   * 
+   * @param {*} evt 
+   */
   handleClickOnTask: function(evt){
     // ici je remonte a l'élément qui a capté l'event, c'est a dire le <p> (l'intitulé de la tache)
     const taskTitleLabelElement = evt.currentTarget;
@@ -48,6 +65,14 @@ const task = {
 
   },
 
+  /**
+   * Méthode qui fait la même chose que la méthode
+   * handleValidateNewTask mais dans le cas ou
+   * l'utilisateur appui sur la touche enter
+   * pour confirmer la modification de la tâche
+   * 
+   * @param {*} evt 
+   */
   handleKeyDown: function(evt){
     if(evt.key === 'Enter'){
       // ATTENTION DELICAT
@@ -57,6 +82,13 @@ const task = {
     }
   },
 
+  /**
+   * Méthode qui intègre la modification de la tâche
+   * et sort du mode d'édition quand on clique
+   * à l'extérieur du champs
+   * 
+   * @param {*} evt 
+   */
   handleValidateNewTask: function(evt){
     // on récupère l'input
     const taskTitleFieldElement = evt.currentTarget;
@@ -76,9 +108,15 @@ const task = {
     // je supprime la classe task--edit
     taskElement.classList.remove('task--edit');
 
-
   },
 
+  /**
+   * Méthode qui crée une nouvelle tâche
+   * 
+   * @param {*} newTaskTitle 
+   * @param {*} newTaskCategoryName 
+   * @returns 
+   */
   createTaskElement: function(newTaskTitle, newTaskCategoryName){
 
     // je cible le template
@@ -109,6 +147,12 @@ const task = {
 
   },
 
+  /**
+   * Méthode qui ajoute la catégorie à une tâche
+   * 
+   * @param {*} taskElement 
+   * @param {*} categoryTitle 
+   */
   updateTaskCategoryName: function(taskElement, categoryTitle){
     // Mise a jour du dataset de la div de classe task
     taskElement.dataset.category = categoryTitle;
@@ -117,6 +161,12 @@ const task = {
     taskCategoryNameElement.textContent = categoryTitle;
   },
 
+  /**
+   * Méthode qui ajoute le titre à une tâche
+   * 
+   * @param {*} taskElement 
+   * @param {*} taskTitle 
+   */
   updateTaskTitle: function(taskElement, taskTitle){
     // je cible le p contenant le titre de la tâche
     const tasktitleElement = taskElement.querySelector('.task__title-label');
@@ -129,7 +179,62 @@ const task = {
 
 
 
-  }  
+  },
 
+  /**
+   * Méthode qui ajoute la classe todo ou complete
+   * si la tâche est toujours en cours ou si elle
+   * est finie
+   * 
+   * @param {*} completion 
+   * @param {*} taskElement 
+   * @returns 
+   */
+  updateClassTask: function(completion, taskElement) {
+
+    if(completion < 100 && completion >= 0) {
+      taskElement.classList.add('task--todo');
+    }
+    else {
+      taskElement.classList.add('task--complete');
+    }
+
+    return taskElement;
+  },
+
+  /**
+   * Affiche dynamiquement la liste des tâches
+   * 
+   * @param {*} objectTasksList 
+   */
+  displayTaskElement: function(objectTasksList) {
+
+    for(const objectTask of objectTasksList) {
+
+      // je cible le template
+      const templateElement = document.querySelector('#task-template');
+      // puis je le clone et je réceptione le clone dans taskCloneElement
+      const taskCloneElement = templateElement.content.cloneNode(true);
+      const taskElement = taskCloneElement.querySelector('.task');
+      // ajoute la classe task--todo ou task--complete à taskElement
+      task.updateClassTask(objectTask.completion, taskElement);
+
+      // ajoute le titre
+      task.updateTaskTitle(taskElement, objectTask.title);
+
+      // ajoute la catégorie
+      task.updateTaskCategoryName(taskElement, objectTask.category.name);
+
+      console.log(taskElement);
+
+      // on insère dans le DOM
+      tasksList.insertTaskIntoTasksList(taskElement);
+
+      // j'appelle la méthode qui pose les écouteurs d'évènements sur chaque tâche
+      task.bindSingleTaskEventListener(taskElement);
+
+    }
+
+  }
 
 }

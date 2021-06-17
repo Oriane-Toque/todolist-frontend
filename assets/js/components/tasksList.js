@@ -3,8 +3,45 @@ const tasksList = {
   init: function(){
     // ici on voudrait pouvoir ajouter des ecouteurs d'évenements sur toute les taches
     tasksList.bindAllTasksEvents();
+
+    // charge les données tasks depuis l'API TodoList
+    tasksList.loadtasksFromAPI();
   },
 
+  /**
+   * Charge les données de l'API
+   * Récupère la liste des tâches à afficher
+   * au chargement du DOM
+   * 
+   */
+  loadtasksFromAPI: function() {
+
+    fetchOptions = {
+      method: 'GET',
+      mode: 'cors',
+      cache: 'no-cache'
+    };
+
+    fetch(categoriesList.apiBaseUrl + '/tasks.json')
+      .then(
+        function(tasksListJson) {
+
+          const objectTasksList = tasksListJson.json();
+          return objectTasksList;
+        } 
+      )
+      .then(
+        function(objectTasksList) {
+
+          task.displayTaskElement(objectTasksList);
+        }
+      )
+  },
+
+  /**
+   * Méthode qui ajoute des écouteurs d'évènements à toutes les tâches
+   * 
+   */
   bindAllTasksEvents: function(){
      // On récupère dans un tableau tous les éléments du DOM correspondant aux tâches
      // les éléments de classe task qui sont dans les éléments de classe tasks
@@ -20,6 +57,11 @@ const tasksList = {
 
   },
   // ajouter une tache a la liste des tache
+  /**
+   * Insère une nouvelle tâche dans le DOM
+   * 
+   * @param {*} taskElement 
+   */
   insertTaskIntoTasksList: function(taskElement){
     // je cible la div contient toute les taches
     const tasksListElement = document.querySelector('.tasks');
