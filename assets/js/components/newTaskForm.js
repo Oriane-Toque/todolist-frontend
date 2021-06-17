@@ -12,6 +12,7 @@ const newTaskForm = {
     const newTaskFormElement = document.querySelector('.task--add form');
 
     newTaskFormElement.addEventListener('submit', newTaskForm.handleNewTaskFormSubmit);
+
   },
 
   handleNewTaskFormSubmit: function(evt){
@@ -23,10 +24,13 @@ const newTaskForm = {
     const taskTitleFieldElement = newTaskFormElement.querySelector('.task__title-field');
     // récupération de la valeur de l'input
     const newTaskTitle = taskTitleFieldElement.value;
-    //
+
     // récupération de l'élément select
     const categoryElement = newTaskFormElement.querySelector('.task__category select');
     const newTaskCategoryName = categoryElement.value;
+
+    // clear formulaire
+    newTaskFormElement.reset();
     
     // j'imagine une methode qui va nous permettre de créer une nouvelle tache
     // cette methode va recevoir 2 arguments : le nom de la tache et le nom de la categorie
