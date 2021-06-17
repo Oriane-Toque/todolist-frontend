@@ -1,36 +1,32 @@
 const tasksList = {
 
-  init: function() {
-
-  // lancement fonction qui ajoute des écouteurs d'évènements sur toutes les tâches
-  tasksList.bindAllTasksEvents();
+  init: function(){
+    // ici on voudrait pouvoir ajouter des ecouteurs d'évenements sur toute les taches
+    tasksList.bindAllTasksEvents();
   },
 
-  /**
-   * méthode qui récupère tous les éléments tâches et ajoute des écouteurs d'évènements
-   */
-  bindAllTasksEvents: function() {
-    // cible tous les éléments contenant les tâches
-    const taskElementsList = document.querySelectorAll('.tasks .task');
+  bindAllTasksEvents: function(){
+     // On récupère dans un tableau tous les éléments du DOM correspondant aux tâches
+     // les éléments de classe task qui sont dans les éléments de classe tasks
+     const taskElementsList = document.querySelectorAll('.tasks .task');
+     
+     
+     for(const taskElement of taskElementsList){
+       // ici j'imagine un composant "task" qui contiendrait une methode 
+       // qui va nous servir a ajouter tous les écouteurs d'évents sur UNE TACHE
+       task.bindSingleTaskEventListener(taskElement);
+     }
+     
 
-    // je veux à chaque tour de boucle récupérer un seul élément task
-    // utilisation for ... of
-    for(const taskElement of taskElementsList) {
-
-      // appelle d'une fonction qui mettrait en place les écouteurs d'évènements sur chaque élément task
-      task.bindSingleTaskEvent(taskElement);
-    }
   },
+  // ajouter une tache a la liste des tache
+  insertTaskIntoTasksList: function(taskElement){
+    // je cible la div contient toute les taches
+    const tasksListElement = document.querySelector('.tasks');
+    // et j'ajoute la nouvelle tache
+    tasksListElement.prepend(taskElement);
 
-  /**
-   * Affiche une tâche dans la liste
-   * 
-   * @param {*} newTaskElement 
-   */
-  insertTaskIntoTaskList: function(newTaskElement) {
-
-    // insertion dans le DOM
-    // avant le 1er enfant du parents
-    document.querySelector('.tasks').prepend(newTaskElement);
   }
+
+
 }
