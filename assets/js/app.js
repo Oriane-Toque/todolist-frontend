@@ -4,6 +4,7 @@ const app = {
     console.log('app.init executé');
     tasksList.init();
     newTaskForm.init();
+    categoriesList.init();
   },
   
 };
