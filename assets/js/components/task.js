@@ -123,8 +123,27 @@ const task = {
     // je récupère mon template
     const templateNewTask = document.getElementById("task-template");
     // je le clone
-    const newTaskElement = templateNewTask.content.cloneNode(true);
+    const taskCloneElement = templateNewTask.content.cloneNode(true);
 
+    // je cible le 1er élément enfant de mon fragment
+    const newTaskElement = taskCloneElement.firstElementChild;
+
+    task.updateTaskTitle(newTaskElement, titleValueNewTask);
+
+    task.updateTaskCategory(newTaskElement, categoryValueNewTask);
+
+    task.bindSingleTaskEvent(newTaskElement);
+
+    return newTaskElement;
+  },
+
+  /**
+   * Méthode pour ajouter le titre au template
+   * 
+   * @param {*} newTaskElement 
+   * @param {*} titleValueNewTask 
+   */
+  updateTaskTitle: function(newTaskElement, titleValueNewTask) {
     // je cible le title
     const modelNewTitle = newTaskElement.querySelector('.task__title-label');
     // j'affecte le nom
@@ -132,15 +151,20 @@ const task = {
     // je cible l'input du title
     const inputNewTitle = newTaskElement.querySelector('.task__title-field');
     inputNewTitle.setAttribute('value', titleValueNewTask);
+  },
 
+  /**
+   * Méthode pour ajouter la catégorie au template
+   * 
+   * @param {*} newTaskElement 
+   * @param {*} categoryValueNewTask 
+   */
+  updateTaskCategory: function(newTaskElement, categoryValueNewTask) {
     // je cible la catégorie
     const modelNewCategory = newTaskElement.querySelector('.task__category p');
     // j'affecte le nom
     modelNewCategory.textContent = categoryValueNewTask;
-    // je veux aussi affecter aussi au data sur task donc je le cible
-    modelDataCategory = newTaskElement.querySelector('.task');
-    modelDataCategory.dataset.category = categoryValueNewTask;
-
-    return newTaskElement;
+    // je veux aussi affecter aussi au data sur task la value de category
+    newTaskElement.dataset.category = categoryValueNewTask;
   }
 }

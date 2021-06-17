@@ -9,7 +9,7 @@ const newTask = {
   },
 
   /**
-   * Méthode permettant d'ajouter une tâche
+   * Méthode gérant la soumission d'ajout de tâche
    * 
    * @param {*} evt 
    */
@@ -22,7 +22,7 @@ const newTask = {
     // je récupère la valeur soumise
     const titleValueNewTask = inputTitleNewTask.value;
 
-    // bis category
+    // bis title
     const selectCategoryNewTask = document.querySelector('.task--add select');
     const categoryValueNewTask = selectCategoryNewTask.value;
 
