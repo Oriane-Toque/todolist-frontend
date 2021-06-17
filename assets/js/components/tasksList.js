@@ -20,5 +20,17 @@ const tasksList = {
       // appelle d'une fonction qui mettrait en place les écouteurs d'évènements sur chaque élément task
       task.bindSingleTaskEvent(taskElement);
     }
+  },
+
+  /**
+   * Affiche une tâche dans la liste
+   * 
+   * @param {*} newTaskElement 
+   */
+  insertTaskIntoTaskList: function(newTaskElement) {
+
+    // insertion dans le DOM
+    // avant le 1er enfant du parents
+    document.querySelector('.tasks').prepend(newTaskElement);
   }
 }

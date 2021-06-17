@@ -338,59 +338,60 @@
 
     </div>
 
+    <!-- création d'un template task -->
+    <template id="task-template">
+      <div class="task task--todo" data-category="">
+  
+        <div class="task__content">
+          <div class="task__title">
+            <p class="task__title-label"></p>
+            <input class="task__title-field input" type="text" value="" placeholder="Titre de la tâche"
+              name="title" />
+          </div>
+          <div class="task__category">
+            <p></p>
+          </div>
+          <div class="task__buttons">
+            <button class="task__button task__button--incomplete button is-success is-small">
+              <span class="icon is-small">
+                <i class="fa fa-step-backward"></i>
+              </span>
+            </button>
+            <button class="task__button task__button--desarchive button is-success is-small">
+              <span class="icon is-small">
+                <i class="fa fa-undo"></i>
+              </span>
+            </button>
+            <button class="task__button task__button--validate button is-success is-small">
+              <span class="icon is-small">
+                <i class="fa fa-check-square-o"></i>
+              </span>
+            </button>
+            <button class="task__button task__button--modify button is-warning is-small">
+              <span class="icon is-small">
+                <i class="fa fa-pencil-square-o"></i>
+              </span>
+            </button>
+            <button class="task__button task__button--archive button is-danger is-small">
+              <span class="icon is-small">
+                <i class="fa fa-archive"></i>
+              </span>
+            </button>
+            <button class="task__button task__button--delete button is-danger is-small">
+              <span class="icon is-small">
+                <i class="fa fa-trash"></i>
+              </span>
+            </button>
+          </div>
+        </div>
+  
+        <div class="progress-bar">
+          <div class="progress-bar__level" style="width:0%"></div>
+        </div>
+  
+      </div>
+    </template>
+
   </body>
-
-  <template id="taskTemplate">
-    <div class="task task--todo">
-
-      <div class="task__content">
-        <div class="task__title">
-          <p class="task__title-label"></p>
-          <input class="task__title-field input" type="text" value="" placeholder="Titre de la tâche"
-            name="title" />
-        </div>
-        <div class="task__category">
-          <p></p>
-        </div>
-        <div class="task__buttons">
-          <button class="task__button task__button--incomplete button is-success is-small">
-            <span class="icon is-small">
-              <i class="fa fa-step-backward"></i>
-            </span>
-          </button>
-          <button class="task__button task__button--desarchive button is-success is-small">
-            <span class="icon is-small">
-              <i class="fa fa-undo"></i>
-            </span>
-          </button>
-          <button class="task__button task__button--validate button is-success is-small">
-            <span class="icon is-small">
-              <i class="fa fa-check-square-o"></i>
-            </span>
-          </button>
-          <button class="task__button task__button--modify button is-warning is-small">
-            <span class="icon is-small">
-              <i class="fa fa-pencil-square-o"></i>
-            </span>
-          </button>
-          <button class="task__button task__button--archive button is-danger is-small">
-            <span class="icon is-small">
-              <i class="fa fa-archive"></i>
-            </span>
-          </button>
-          <button class="task__button task__button--delete button is-danger is-small">
-            <span class="icon is-small">
-              <i class="fa fa-trash"></i>
-            </span>
-          </button>
-        </div>
-      </div>
-
-      <div class="progress-bar">
-        <div class="progress-bar__level" style="width:0%"></div>
-      </div>
-
-    </div>
-  </template>
 
 </html>
