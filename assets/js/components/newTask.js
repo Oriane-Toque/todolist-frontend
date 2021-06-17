@@ -27,14 +27,22 @@ const newTask = {
 
 
     // je récupère mon input
-    const inputNameNewTask = document.querySelector('.task--add input');
+    const inputTitleNewTask = document.querySelector('.task--add input');
     // je récupère la valeur soumise
-    const nameValueNewTask = inputNameNewTask.value;
+    const titleValueNewTask = inputTitleNewTask.value;
 
+    // je récupère mon template
     const templateNewTask = document.getElementById("taskTemplate");
-    const contentNewTask = templateNewTask.content.cloneNode(true);
+    // je le clone
+    const modelNewTask = templateNewTask.content.cloneNode(true);
 
-    // console.log(nameValueNewTask);
-    // console.log(categoryValueNewTask);
+    // je cible le title
+    const modelNewTitle = modelNewTask.querySelector('.task__title-label');
+    // j'affecte le nom
+    modelNewTitle.textContent = titleValueNewTask;
+
+    // insertion dans le DOM
+    // avant le 1er enfant du parents
+    document.querySelector('.tasks').prepend(modelNewTask);
   }
 }
