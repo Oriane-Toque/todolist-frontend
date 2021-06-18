@@ -1,7 +1,10 @@
 const task = {
 
-  // Cette methode a pour objectif de poser tous les écouteurs d'evenements
-  // sur un element tache, elle va donc recevoir un élement html tache
+  /**
+   * Méthode qui pose tous les écouteurs d'évènements sur un élément tâche
+   * 
+   * @param {*} taskElement 
+   */
   bindSingleTaskEventListener: function (taskElement){
     // je cible le titre de la tache :
     const taskTitleLabelElement = taskElement.querySelector('.task__title-label');
@@ -203,6 +206,22 @@ const task = {
   },
 
   /**
+   * Méthode qui ajoute l'état d'avancement d'une tâche
+   * 
+   * @param {*} completion 
+   * @param {*} taskElement 
+   */
+  updateCompletionTask: function(completion, taskElement) {
+
+    // console.log(completion);
+    // je cible la barre de progression
+    const progressTaskElement = taskElement.querySelector('.progress-bar__level');
+
+    // je change le style pour afficher l'avancement dans le DOM
+    progressTaskElement.setAttribute('style', 'width:' + completion + '%');
+  },
+
+  /**
    * Affiche dynamiquement la liste des tâches
    * 
    * @param {*} objectTasksList 
@@ -216,6 +235,7 @@ const task = {
       // puis je le clone et je réceptione le clone dans taskCloneElement
       const taskCloneElement = templateElement.content.cloneNode(true);
       const taskElement = taskCloneElement.querySelector('.task');
+
       // ajoute la classe task--todo ou task--complete à taskElement
       task.updateClassTask(objectTask.completion, taskElement);
 
@@ -225,7 +245,10 @@ const task = {
       // ajoute la catégorie
       task.updateTaskCategoryName(taskElement, objectTask.category.name);
 
-      console.log(taskElement);
+      // ajoute l'état d'avancement de la tâche
+      task.updateCompletionTask(objectTask.completion, taskElement);
+
+      // console.log(taskElement);
 
       // on insère dans le DOM
       tasksList.insertTaskIntoTasksList(taskElement);
