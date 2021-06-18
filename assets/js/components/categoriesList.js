@@ -61,7 +61,7 @@ const categoriesList = {
       categoriesList.createOptionsList(objectCategoriesList, elementSelectList);
 
       // j'ajoute au DOM mes selects
-      contentCategoryList.appendChild(elementSelectList);
+      contentCategoryList.append(elementSelectList);
     }
   },
 

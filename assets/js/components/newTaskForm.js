@@ -81,6 +81,6 @@ const newTaskForm = {
       console.log(true);
       return true;
     }
-  },
+  }
 
 }
