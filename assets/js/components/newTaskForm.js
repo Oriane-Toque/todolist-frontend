@@ -38,6 +38,9 @@ const newTaskForm = {
 
     // clear formulaire
     newTaskFormElement.reset();
+
+    // ci dessous je met le focus sur l'input de la tache
+    taskTitleFieldElement.focus();
     
     // j'imagine une methode qui va nous permettre de créer une nouvelle tache
     // cette methode va recevoir 2 arguments : le nom de la tache et le nom de la categorie
