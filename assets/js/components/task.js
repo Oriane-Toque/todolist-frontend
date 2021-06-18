@@ -5,7 +5,7 @@ const task = {
    * 
    * @param {*} taskElement 
    */
-  bindSingleTaskEventListener: function (taskElement){
+  bindSingleTaskEventListener: function (taskElement) {
     // je cible le titre de la tache :
     const taskTitleLabelElement = taskElement.querySelector('.task__title-label');
     taskTitleLabelElement.addEventListener('click', task.handleClickOnTask);
@@ -22,13 +22,13 @@ const task = {
     completeButtonElement.addEventListener('click', task.handleCompleteTask);
 
   },
-  
+
   /**
    * Méthode qui valide la tâche
    * 
    * @param {*} evt 
    */
-  handleCompleteTask: function(evt){
+  handleCompleteTask: function (evt) {
     //alert('valider');
     // je cible le bouton sur lequel l'utilisateur a click
     const completeButtonElement = evt.currentTarget;
@@ -42,7 +42,7 @@ const task = {
    * 
    * @param {*} taskElement 
    */
-  markTaskAsComplete: function(taskElement){
+  markTaskAsComplete: function (taskElement) {
     taskElement.classList.remove('task--todo');
     taskElement.classList.add('task--complete');
   },
@@ -54,7 +54,7 @@ const task = {
    * 
    * @param {*} evt 
    */
-  handleClickOnTask: function(evt){
+  handleClickOnTask: function (evt) {
     // ici je remonte a l'élément qui a capté l'event, c'est a dire le <p> (l'intitulé de la tache)
     const taskTitleLabelElement = evt.currentTarget;
     // ici je remonte a la div de classe task
@@ -76,8 +76,8 @@ const task = {
    * 
    * @param {*} evt 
    */
-  handleKeyDown: function(evt){
-    if(evt.key === 'Enter'){
+  handleKeyDown: function (evt) {
+    if (evt.key === 'Enter') {
       // ATTENTION DELICAT
       // ici je passe l'objet Event "evt" a la methode
       // handleValidateNewTask pour que le mecanisme reste fonctionnel
@@ -92,7 +92,7 @@ const task = {
    * 
    * @param {*} evt 
    */
-  handleValidateNewTask: function(evt){
+  handleValidateNewTask: function (evt) {
     // on récupère l'input
     const taskTitleFieldElement = evt.currentTarget;
 
@@ -120,7 +120,7 @@ const task = {
    * @param {*} newTaskCategoryName 
    * @returns 
    */
-  createTaskElement: function(newTaskTitle, newTaskCategoryName){
+  createTaskElement: function (newTaskTitle, newTaskCategoryName, newTaskCompletion = 0) {
 
     // je cible le template
     const templateElement = document.querySelector('#task-template');
@@ -137,14 +137,23 @@ const task = {
     et si on écrit : let newTaskElement = templateTaskElement.content.cloneNode(true); on retourne également un fragment de document
     cette subtilité est importante car si l'on veut réellement accéder à l'élément tâche contenu dans le fragment (et modifier un de ses attribut, pour mettre à jour le nom de la catégorie en dataset par exemple), alors il faut faire une sélection supplémentaire sur le fragment que l'on vient de récupérer : newTaskElement.querySelector('.task').
     */
-    
+
     // ici j'imagine une methode qui nous permet de changer le titre d'une tache
     task.updateTaskTitle(newTaskElement, newTaskTitle);
     // ici j'imagine une methode qui nous permet de changer le nom de la categorie pour une tache
     task.updateTaskCategoryName(newTaskElement, newTaskCategoryName);
 
+    // ajoute la classe task--todo ou task--complete à taskElement
+    task.updateClassTask(newTaskCompletion, newTaskElement);
+
+
+    // ajoute l'état d'avancement de la tâche
+    task.updateCompletionTask(newTaskCompletion, newTaskElement);
+
     // ici j'utilise une methode qui va nous permettre d'ajouter tous les écouteurs d'events sur UNE TACHE
     task.bindSingleTaskEventListener(newTaskElement);
+
+    // console.log(taskElement);
 
     return newTaskElement;
 
@@ -156,7 +165,7 @@ const task = {
    * @param {*} taskElement 
    * @param {*} categoryTitle 
    */
-  updateTaskCategoryName: function(taskElement, categoryTitle){
+  updateTaskCategoryName: function (taskElement, categoryTitle) {
     // Mise a jour du dataset de la div de classe task
     taskElement.dataset.category = categoryTitle;
     // je cible le p enfant direct d'un element de classe task__category
@@ -170,7 +179,7 @@ const task = {
    * @param {*} taskElement 
    * @param {*} taskTitle 
    */
-  updateTaskTitle: function(taskElement, taskTitle){
+  updateTaskTitle: function (taskElement, taskTitle) {
     // je cible le p contenant le titre de la tâche
     const tasktitleElement = taskElement.querySelector('.task__title-label');
     // mise a jour de sa valeur
@@ -193,12 +202,11 @@ const task = {
    * @param {*} taskElement 
    * @returns 
    */
-  updateClassTask: function(completion, taskElement) {
+  updateClassTask: function (completion, taskElement) {
 
-    if(completion < 100 && completion >= 0) {
+    if (completion < 100 && completion >= 0) {
       taskElement.classList.add('task--todo');
-    }
-    else {
+    } else {
       taskElement.classList.add('task--complete');
     }
 
@@ -211,7 +219,7 @@ const task = {
    * @param {*} completion 
    * @param {*} taskElement 
    */
-  updateCompletionTask: function(completion, taskElement) {
+  updateCompletionTask: function (completion, taskElement) {
 
     // console.log(completion);
     // je cible la barre de progression
@@ -219,45 +227,6 @@ const task = {
 
     // je change le style pour afficher l'avancement dans le DOM
     progressTaskElement.setAttribute('style', 'width:' + completion + '%');
-  },
-
-  /**
-   * Affiche dynamiquement la liste des tâches
-   * 
-   * @param {*} objectTasksList 
-   */
-  displayTaskElement: function(objectTasksList) {
-
-    for(const objectTask of objectTasksList) {
-
-      // je cible le template
-      const templateElement = document.querySelector('#task-template');
-      // puis je le clone et je réceptione le clone dans taskCloneElement
-      const taskCloneElement = templateElement.content.cloneNode(true);
-      const taskElement = taskCloneElement.querySelector('.task');
-
-      // ajoute la classe task--todo ou task--complete à taskElement
-      task.updateClassTask(objectTask.completion, taskElement);
-
-      // ajoute le titre
-      task.updateTaskTitle(taskElement, objectTask.title);
-
-      // ajoute la catégorie
-      task.updateTaskCategoryName(taskElement, objectTask.category.name);
-
-      // ajoute l'état d'avancement de la tâche
-      task.updateCompletionTask(objectTask.completion, taskElement);
-
-      // console.log(taskElement);
-
-      // on insère dans le DOM
-      tasksList.insertTaskIntoTasksList(taskElement);
-
-      // j'appelle la méthode qui pose les écouteurs d'évènements sur chaque tâche
-      task.bindSingleTaskEventListener(taskElement);
-
-    }
-
   }
 
 }

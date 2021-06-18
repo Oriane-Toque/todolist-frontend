@@ -5,7 +5,7 @@ const tasksList = {
     tasksList.bindAllTasksEvents();
 
     // charge les données tasks depuis l'API TodoList
-    tasksList.loadtasksFromAPI();
+    tasksList.loadTasksFromAPI();
   },
 
   /**
@@ -14,7 +14,7 @@ const tasksList = {
    * au chargement du DOM
    * 
    */
-  loadtasksFromAPI: function() {
+  loadTasksFromAPI: function() {
 
     fetchOptions = {
       method: 'GET',
@@ -33,7 +33,12 @@ const tasksList = {
       .then(
         function(objectTasksList) {
 
-          task.displayTaskElement(objectTasksList);
+          for(const singleTask of objectTasksList){
+
+            const newTaskElement = task.createTaskElement(singleTask.title, singleTask.category.name, singleTask.completion);
+            tasksList.insertTaskIntoTasksList(newTaskElement);
+
+          }
         }
       )
   },
