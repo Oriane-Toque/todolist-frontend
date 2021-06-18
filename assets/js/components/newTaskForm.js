@@ -45,6 +45,6 @@ const newTaskForm = {
     // j'imagine une methode dont le but sera de nous afficher la tache ( l'inserer dans la lsite des taches);
     tasksList.insertTaskIntoTasksList(newTaskElement);
 
-  },
+  }
 
 }

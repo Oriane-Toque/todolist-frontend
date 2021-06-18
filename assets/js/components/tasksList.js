@@ -22,7 +22,7 @@ const tasksList = {
       cache: 'no-cache'
     };
 
-    fetch(categoriesList.apiBaseUrl + '/tasks.json')
+    fetch(categoriesList.apiBaseUrl + '/tasks.json', fetchOptions)
       .then(
         function(tasksListJson) {
 
