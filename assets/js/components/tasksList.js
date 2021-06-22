@@ -32,10 +32,11 @@ const tasksList = {
       )
       .then(
         function(objectTasksList) {
+          // console.log(objectTasksList);
 
           for(const singleTask of objectTasksList){
 
-            const newTaskElement = task.createTaskElement(singleTask.title, singleTask.category.name, singleTask.completion);
+            const newTaskElement = task.createTaskElement(singleTask.id, singleTask.title, singleTask.category.name, singleTask.completion);
             tasksList.insertTaskIntoTasksList(newTaskElement);
 
           }

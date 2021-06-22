@@ -120,7 +120,7 @@ const task = {
    * @param {*} newTaskCategoryName 
    * @returns 
    */
-  createTaskElement: function (newTaskTitle, newTaskCategoryName, newTaskCompletion = 0) {
+  createTaskElement: function (newTaskId, newTaskTitle, newTaskCategoryName, newTaskCompletion = 0) {
 
     // je cible le template
     const templateElement = document.querySelector('#task-template');
@@ -137,6 +137,8 @@ const task = {
     et si on écrit : let newTaskElement = templateTaskElement.content.cloneNode(true); on retourne également un fragment de document
     cette subtilité est importante car si l'on veut réellement accéder à l'élément tâche contenu dans le fragment (et modifier un de ses attribut, pour mettre à jour le nom de la catégorie en dataset par exemple), alors il faut faire une sélection supplémentaire sur le fragment que l'on vient de récupérer : newTaskElement.querySelector('.task').
     */
+
+    task.updateTaskId(newTaskElement, newTaskId);
 
     // ici j'imagine une methode qui nous permet de changer le titre d'une tache
     task.updateTaskTitle(newTaskElement, newTaskTitle);
@@ -157,6 +159,14 @@ const task = {
 
     return newTaskElement;
 
+  },
+
+  /**
+   * Méthode qui ajoute l'id de la task
+   */
+  updateTaskId: function(taskElement, taskId) {
+
+    taskElement.dataset.id = taskId;
   },
 
   /**
