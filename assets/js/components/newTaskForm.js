@@ -1,9 +1,52 @@
 const newTaskForm = {
 
-
   // initialisation du composant
   init: function () {
     newTaskForm.bindNewTaskFormEventListener();
+  },
+
+  /**
+   * Méthode qui envoie les données du formulaire vers l'API
+   */
+  sendDataFromAPI(titleTask, categoryTask) {
+    // On stocke les données à transférer
+    const data = {
+      title: titleTask,
+      category: categoryTask
+    };
+
+    // On prépare les entêtes HTTP (headers) de la requête
+    // afin de spécifier que les données sont en JSON
+    const httpHeaders = new Headers();
+    httpHeaders.append("Content-Type", "application/json");
+
+    // On consomme l'API pour ajouter en DB
+    const fetchOptions = {
+        method: 'POST',
+        mode: 'cors',
+        cache: 'no-cache',
+        // On ajoute les headers dans les options
+        headers: httpHeaders,
+        // On ajoute les données, encodées en JSON, dans le corps de la requête
+        body: JSON.stringify(data)
+    };
+
+    // Exécuter la requête HTTP avec FETCH
+    fetch(app.ApiRootUrl + '/tasks', fetchOptions)
+    .then(
+        function(response) {
+            // console.log(response);
+            // Si HTTP status code à 201 => OK
+            if (response.status == 201) {
+                alert('ajout effectué');
+
+                // TODO selon ce qu'on veut faire une fois la réponse récupérée
+            }
+            else {
+                alert('L\'ajout a échoué');
+            }
+        }
+    )
   },
 
   /**
@@ -49,6 +92,7 @@ const newTaskForm = {
       const errorAddTask = document.querySelector('form > p');
       app.deleteErrorMessage(newTaskFormElement, errorAddTask);
 
+      newTaskForm.sendDataFromAPI(newTaskTitle, newTaskCategoryName);
       // j'imagine une methode qui va nous permettre de créer une nouvelle tache
       // cette methode va recevoir 2 arguments : le nom de la tache et le nom de la categorie
       const newTaskElement = task.createTaskElement(newTaskTitle, newTaskCategoryName);

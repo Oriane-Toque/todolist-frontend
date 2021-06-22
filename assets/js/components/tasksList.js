@@ -17,6 +17,7 @@ const tasksList = {
   loadTasksFromAPI: function() {
 
     fetchOptions = {
+
       method: 'GET',
       mode: 'cors',
       cache: 'no-cache'
