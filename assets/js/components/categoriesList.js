@@ -1,7 +1,5 @@
 const categoriesList = {
 
-  apiBaseUrl: 'https://benoclock.github.io/S07-todolist',
-
   init: function () {
 
     categoriesList.loadCategoriesFromAPI();
@@ -19,7 +17,7 @@ const categoriesList = {
       cache: 'no-cache'
     };
 
-    fetch(categoriesList.apiBaseUrl + '/categories.json', fetchOptions)
+    fetch(app.apiRootUrl + '/categories', fetchOptions)
       .then(
 
         function (categoriesListJson) {

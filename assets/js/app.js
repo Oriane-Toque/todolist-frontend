@@ -1,5 +1,7 @@
 const app = {
 
+  apiRootUrl: 'http://0.0.0.0:8080',
+
   init: function () {
     console.log('app.init executé');
     tasksList.init();
