@@ -20,6 +20,10 @@ const task = {
     // je cible le bouton de validation de la tache 
     const completeButtonElement = taskElement.querySelector('.task__button--validate');
     completeButtonElement.addEventListener('click', task.handleCompleteTask);
+    //-------------------------------
+    // je cible le bouton pour marquer une tâche comme incomplète
+    const taskIncompleteButtonElement = taskElement.querySelector('.task__button--incomplete');
+    taskIncompleteButtonElement.addEventListener('click', task.handleIncompleteTask);
 
   },
 
@@ -30,15 +34,7 @@ const task = {
    * 
    * @param {*} taskElement 
    */
-  sendDataFromAPIPatch: function (taskElement) {
-    // récupération de l'id task
-    const taskId = taskElement.dataset.id;
-    // on veut mettre à jour la tache taskId et lui mettre sa completion à 100
-
-    // on stocke les données à transférer
-    const taskData = {
-      completion: 100
-    };
+  sendDataCompletionFromAPIPatch: function (taskElement, taskId, taskData, completionMethod, completion) {
 
     // on veut spécifier que les données sont en json :
     // pour se faire on prépare les entetes HTTP (headers) de la requête
@@ -61,12 +57,14 @@ const task = {
           // console.log(response);
           // Si HTTP status code à 204 => OK
           if (response.status == 204) {
-            console.log('modif effectuée');
+            console.log('maj effectuée');
 
-            task.markTaskAsComplete(taskElement);
+            completionMethod;
+
+            task.updateCompletionTask(completion, taskElement);
 
           } else {
-            console.log('modif a échoué');
+            console.log('echec maj');
           }
         }
       )
@@ -85,8 +83,36 @@ const task = {
     // ici je cible la div de class task qui contient le bouton
     const taskElement = completeButtonElement.closest('.task');
 
+    // récupération de l'id task
+    const taskId = taskElement.dataset.id;
+    // on veut mettre à jour la tache taskId et lui mettre sa completion à 100
+
+    // on stocke les données à transférer
+    const taskData = {
+      completion: 100
+    };
+
     //! ici récupération id + MAJ + stockage données
-    task.sendDataFromAPIPatch(taskElement);
+    task.sendDataCompletionFromAPIPatch(taskElement, taskId, taskData, task.markTaskAsComplete(taskElement), 100);
+  },
+
+  handleIncompleteTask: function (evt) {
+
+    // récupération du bouton à l'origine de l'évènement
+    const taskIncompleteButtonElement = evt.currentTarget;
+    // je remonte à l'élément tache
+    const taskElement = taskIncompleteButtonElement.closest('.task');
+    // récupération de l'id de la tâche
+    const taskId = taskElement.dataset.id;
+
+    //! MAJ de la completion de tache en bdd
+
+    // on stocke les données à transférer
+    const taskData = {
+      completion: 0
+    };
+
+    task.sendDataCompletionFromAPIPatch(taskElement, taskId, taskData, task.markTaskAsIncomplete(taskElement), 0);
   },
 
   /**
@@ -99,6 +125,16 @@ const task = {
     taskElement.classList.add('task--complete');
   },
   // Cette methode a pour objectif de masquer le p de la tache et afficher l'input
+
+  /**
+   * Méthode qui change la classe si finalement la tache n'est pas complete
+   * 
+   * @param {*} taskElement 
+   */
+  markTaskAsIncomplete: function (taskElement) {
+    taskElement.classList.remove('task--complete');
+    taskElement.classList.add('task--todo');
+  },
 
   /**
    * Méthode qui masque le paragraphe de la tache et affiche l'input
