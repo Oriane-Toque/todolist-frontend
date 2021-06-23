@@ -24,7 +24,10 @@ const task = {
     // je cible le bouton pour marquer une tâche comme incomplète
     const taskIncompleteButtonElement = taskElement.querySelector('.task__button--incomplete');
     taskIncompleteButtonElement.addEventListener('click', task.handleIncompleteTask);
-
+    //-------------------------------
+    // je cible le bouton pour archiver une tâche
+    const taskArchiveButtonElement = taskElement.querySelector('.task__button--archive');
+    taskArchiveButtonElement.addEventListener('click', task.handleArchiveTask);
   },
 
 
@@ -72,6 +75,7 @@ const task = {
 
   /**
    * Méthode qui valide la tâche
+   * Completion à 100
    * 
    * @param {*} evt 
    */
@@ -96,6 +100,12 @@ const task = {
     task.sendDataCompletionFromAPIPatch(taskElement, taskId, taskData, task.markTaskAsComplete(taskElement), 100);
   },
 
+  /**
+   * Méthode qui invalide la tâche
+   * Completion à 0
+   * 
+   * @param {*} evt 
+   */
   handleIncompleteTask: function (evt) {
 
     // récupération du bouton à l'origine de l'évènement
@@ -113,6 +123,48 @@ const task = {
     };
 
     task.sendDataCompletionFromAPIPatch(taskElement, taskId, taskData, task.markTaskAsIncomplete(taskElement), 0);
+  },
+
+  handleArchiveTask: function(evt) {
+
+    // je récupère mon élément lié à l'évènement
+    const taskArchiveButtonElement = evt.currentTarget;
+    // je remonte et récupère ma tâche
+    const taskElement = taskArchiveButtonElement.closest('.task');
+    // je récupère l'id de la tache
+    const taskId = taskElement.dataset.id;
+
+    // MAJ statut de la tâche dans la bdd
+    const taskData = {
+      status: 2
+    };
+
+    // on prépare les entetes de la requete http
+    // on spécifie que les données sont au format json
+    httpHeaders = new Headers();
+    httpHeaders.append("Content-Type", "application/json");
+
+    // on prépare les options de la requete
+    fetchOptions = {
+      method: 'PATCH',
+      mode: 'cors',
+      cache: 'no-cache',
+      headers: httpHeaders,
+      body: JSON.stringify(taskData)
+    };
+
+    // on envoie la requete via fetch
+    fetch(app.apiRootUrl + '/tasks/' + taskId, fetchOptions)
+      .then(
+        function(response) {
+          if(response.status == 204) {
+            console.log('MAJ status task ok');
+            // todo update status method
+          } else {
+            console.log('ERROR ECHEC MAJ');
+          }
+        }
+      )
   },
 
   /**
