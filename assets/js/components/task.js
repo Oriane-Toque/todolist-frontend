@@ -190,15 +190,47 @@ const task = {
     // on remonte a la div de classe task
     const taskElement = taskTitleFieldElement.closest('.task');
 
-    // je cible le <p> a partir de l'input
-    const taskTitleLabelElement = taskTitleFieldElement.previousElementSibling;
+    // récupération de l'id de la tâche
+    const taskId = taskElement.dataset.id;
 
-    // je change son contenu texte par le contenu de l'input
-    taskTitleLabelElement.textContent = newTaskTitle;
+    // MAJ - requete http à l'api
+    const taskData = {
+      title: newTaskTitle
+    };
 
-    // je supprime la classe task--edit
-    taskElement.classList.remove('task--edit');
+    // on prépare les entetes http de la requete
+    // pour spécifier que les données sont en json
+    httpHeaders = new Headers();
+    httpHeaders.append("Content-Type", "application/json");
 
+    // je spécifie les options de ma requete
+    fetchOptions = {
+      method: 'PATCH',
+      mode: 'cors',
+      cache: 'no-cache',
+      headers: httpHeaders,
+      body: JSON.stringify(taskData)
+    };
+
+    // j'envoie ma requete à mon api
+    fetch(app.apiRootUrl + '/tasks/' + taskId, fetchOptions)
+      .then(
+        function (response) {
+          if (response.status == 204) {
+            console.log('MAJ titre tache dans la bdd effectuée');
+            // je cible le <p> a partir de l'input
+            const taskTitleLabelElement = taskTitleFieldElement.previousElementSibling;
+
+            // je change son contenu texte par le contenu de l'input
+            taskTitleLabelElement.textContent = newTaskTitle;
+
+            // je supprime la classe task--edit
+            taskElement.classList.remove('task--edit');
+          } else {
+            console.log('ERROR ECHEC MAJ');
+          }
+        }
+      )
   },
 
   /**
