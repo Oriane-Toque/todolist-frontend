@@ -37,7 +37,7 @@ const tasksList = {
 
           for(const singleTask of objectTasksList){
 
-            const newTaskElement = task.createTaskElement(singleTask.id, singleTask.title, singleTask.category.name, singleTask.completion);
+            const newTaskElement = task.createTaskElement(singleTask.id, singleTask.title, singleTask.category.name, singleTask.completion, singleTask.status);
             tasksList.insertTaskIntoTasksList(newTaskElement);
 
           }

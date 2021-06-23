@@ -64,7 +64,7 @@ const task = {
 
             completionMethod;
 
-            task.updateCompletionTask(completion, taskElement);
+            task.updateCompletionTask(taskElement, completion);
 
           } else {
             console.log('echec maj');
@@ -125,6 +125,11 @@ const task = {
     task.sendDataCompletionFromAPIPatch(taskElement, taskId, taskData, task.markTaskAsIncomplete(taskElement), 0);
   },
 
+  /**
+   * Méthode qui archive une tâche
+   * 
+   * @param {*} evt 
+   */
   handleArchiveTask: function(evt) {
 
     // je récupère mon élément lié à l'évènement
@@ -159,7 +164,9 @@ const task = {
         function(response) {
           if(response.status == 204) {
             console.log('MAJ status task ok');
-            // todo update status method
+
+            // méthode qui affiche la tache comme étant archivée
+            task.updateClassStatusTask(taskElement, 2);
           } else {
             console.log('ERROR ECHEC MAJ');
           }
@@ -292,7 +299,7 @@ const task = {
    * @param {*} newTaskCategoryName 
    * @returns 
    */
-  createTaskElement: function (newTaskId, newTaskTitle, newTaskCategoryName, newTaskCompletion = 0) {
+  createTaskElement: function (newTaskId, newTaskTitle, newTaskCategoryName, newTaskCompletion = 0, newTaskStatus) {
 
     // je cible le template
     const templateElement = document.querySelector('#task-template');
@@ -318,11 +325,13 @@ const task = {
     task.updateTaskCategoryName(newTaskElement, newTaskCategoryName);
 
     // ajoute la classe task--todo ou task--complete à taskElement
-    task.updateClassTask(newTaskCompletion, newTaskElement);
-
+    task.updateClassCompletionTask(newTaskElement, newTaskCompletion);
 
     // ajoute l'état d'avancement de la tâche
-    task.updateCompletionTask(newTaskCompletion, newTaskElement);
+    task.updateCompletionTask(newTaskElement, newTaskCompletion);
+
+    // ajoute la classe archive si statut tache = 2
+    task.updateClassStatusTask(newTaskElement, newTaskStatus);
 
     // ici j'utilise une methode qui va nous permettre d'ajouter tous les écouteurs d'events sur UNE TACHE
     task.bindSingleTaskEventListener(newTaskElement);
@@ -384,7 +393,7 @@ const task = {
    * @param {*} taskElement 
    * @returns 
    */
-  updateClassTask: function (completion, taskElement) {
+  updateClassCompletionTask: function (taskElement, completion) {
 
     if (completion < 100 && completion >= 0) {
       taskElement.classList.replace('task--complete', 'task--todo');
@@ -396,12 +405,28 @@ const task = {
   },
 
   /**
+   * Méthode qui modifie une tâche si elle est archivée
+   * 
+   * @param {*} taskElement 
+   * @param {*} status 
+   */
+  updateClassStatusTask: function(taskElement, status) {
+
+    if(status === 2) {
+      taskElement.classList.replace('task--todo','task--archive');
+      taskElement.classList.replace('task--complete','task--archive');
+    } else {
+      taskElement.classList.remove('task--archive');
+    }
+  },
+
+  /**
    * Méthode qui ajoute l'état d'avancement d'une tâche
    * 
    * @param {*} completion 
    * @param {*} taskElement 
    */
-  updateCompletionTask: function (completion, taskElement) {
+  updateCompletionTask: function (taskElement, completion) {
 
     // console.log(completion);
     // je cible la barre de progression
