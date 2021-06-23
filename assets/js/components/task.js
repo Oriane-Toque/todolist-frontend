@@ -23,18 +23,70 @@ const task = {
 
   },
 
+
+  /**
+   * Méthode qui modifie l'avancement de la tâche dans la BDD
+   * Methode PATCH
+   * 
+   * @param {*} taskElement 
+   */
+  sendDataFromAPIPatch: function (taskElement) {
+    // récupération de l'id task
+    const taskId = taskElement.dataset.id;
+    // on veut mettre à jour la tache taskId et lui mettre sa completion à 100
+
+    // on stocke les données à transférer
+    const taskData = {
+      completion: 100
+    };
+
+    // on veut spécifier que les données sont en json :
+    // pour se faire on prépare les entetes HTTP (headers) de la requête
+    const httpHeaders = new Headers();
+    httpHeaders.append("Content-Type", "application/json");
+
+    const fetchOptions = {
+      method: 'PATCH',
+      mode: 'cors',
+      cache: 'no-cache',
+      headers: httpHeaders,
+      body: JSON.stringify(taskData)
+    };
+
+    // Exécuter la requête HTTP avec FETCH
+    fetch(app.apiRootUrl + '/tasks/' + taskId, fetchOptions)
+      .then(
+
+        function (response) {
+          // console.log(response);
+          // Si HTTP status code à 201 => OK
+          if (response.status == 204) {
+            console.log('ajout effectué');
+
+            task.markTaskAsComplete(taskElement);
+
+          } else {
+            console.log('L\'ajout a échoué');
+          }
+        }
+      )
+  },
+
   /**
    * Méthode qui valide la tâche
    * 
    * @param {*} evt 
    */
+  //! Modification de la méthode en e07
   handleCompleteTask: function (evt) {
     //alert('valider');
     // je cible le bouton sur lequel l'utilisateur a click
     const completeButtonElement = evt.currentTarget;
     // ici je cible la div de class task qui contient le bouton
     const taskElement = completeButtonElement.closest('.task');
-    task.markTaskAsComplete(taskElement);
+
+    //! ici récupération id + MAJ + stockage données
+    task.sendDataFromAPIPatch(taskElement);
   },
 
   /**
@@ -164,7 +216,7 @@ const task = {
   /**
    * Méthode qui ajoute l'id de la task
    */
-  updateTaskId: function(taskElement, taskId) {
+  updateTaskId: function (taskElement, taskId) {
 
     taskElement.dataset.id = taskId;
   },
@@ -215,9 +267,9 @@ const task = {
   updateClassTask: function (completion, taskElement) {
 
     if (completion < 100 && completion >= 0) {
-      taskElement.classList.add('task--todo');
+      taskElement.classList.replace('task--complete', 'task--todo');
     } else {
-      taskElement.classList.add('task--complete');
+      taskElement.classList.replace('task--todo', 'task--complete');
     }
 
     return taskElement;

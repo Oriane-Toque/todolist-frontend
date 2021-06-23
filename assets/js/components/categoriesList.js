@@ -79,6 +79,7 @@ const categoriesList = {
       const elementOptionList = document.createElement('option');
       // je lui affecte le nom de la catégorie
       elementOptionList.textContent = category.name;
+      elementOptionList.value = category.id;
 
       // puis j'ajoute à chaque tour de boucle option à son parent select
       elementSelectList.appendChild(elementOptionList);
