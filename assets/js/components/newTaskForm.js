@@ -17,6 +17,65 @@ const newTaskForm = {
   },
 
   /**
+   * Méthode qui insère la nouvelle tâche dans la BDD via notre API
+   * 
+   * @param {*} newTaskTitle 
+   * @param {*} newTaskCategoryId 
+   * @param {*} newTaskCategoryName 
+   */
+  sendNewTaskFromAPI: function(newTaskTitle, newTaskCategoryId, newTaskCategoryName) {
+    // TODO on va faire un fetch vers /tasks en POST pour AJOUTER
+    // la nouvelle tâche à la BDD
+
+    // on prépare les données de la nouvelle tâche
+    const newTaskData = {
+      title: newTaskTitle,
+      categoryId: newTaskCategoryId
+    };
+
+    // on spécifie que les données sont en JSON
+    let httpHeaders = new Headers();
+    httpHeaders.append("Content-Type", "application/json");
+
+    // on prépare la configuration de la requête http
+    const fetchOptions = {
+      method: 'POST',
+      mode: 'cors',
+      cache: 'no-cache',
+      headers: httpHeaders,
+      body: JSON.stringify(newTaskData)
+    };
+
+    fetch(app.apiRootUrl + '/tasks', fetchOptions)
+      .then(
+        function(response) {
+
+          // Si HTTP status code à 201 => OK
+          if (response.status !== 201) {
+            console.log('error');
+
+            // todo
+
+          } 
+
+          return response.json();
+        }
+      )
+      .then(
+        function(newTaskObject) {
+          
+          // console.log(newTaskObject);
+          // j'imagine une methode qui va nous permettre de créer une nouvelle tache
+          // cette methode va recevoir 2 arguments : le nom de la tache et le nom de la categorie
+          const newTaskElement = task.createTaskElement(newTaskObject.id, newTaskObject.title, newTaskCategoryName, newTaskObject.completion);
+
+          // j'imagine une methode dont le but sera de nous afficher la tache ( l'inserer dans la lsite des taches);
+          tasksList.insertTaskIntoTasksList(newTaskElement);
+        }
+      )
+  },
+
+  /**
    * Méthode gérant la soumission du formulaire d'ajout de tâche
    * 
    * @param {*} evt 
@@ -40,9 +99,6 @@ const newTaskForm = {
     const newTaskCategoryId = categoryElement.value;
     // console.log(newTaskCategoryId);
 
-    // TODO on va faire un fetch vers /tasks en POST pour AJOUTER
-    // la nouvelle tâche à la BDD
-
     // clear formulaire
     newTaskFormElement.reset();
 
@@ -56,10 +112,8 @@ const newTaskForm = {
       const errorAddTask = document.querySelector('form > p');
       app.deleteErrorMessage(newTaskFormElement, errorAddTask);
 
-      // j'imagine une methode qui va nous permettre de créer une nouvelle tache
-      // cette methode va recevoir 2 arguments : le nom de la tache et le nom de la categorie
-      const newTaskElement = task.createTaskElement(newTaskTitle, newTaskCategoryName);
-      // j'imagine une methode dont le but sera de nous afficher la tache ( l'inserer dans la lsite des taches);
+      newTaskForm.sendNewTaskFromAPI(newTaskTitle, newTaskCategoryId, newTaskCategoryName);
+
       tasksList.insertTaskIntoTasksList(newTaskElement);
     }
     // sinon message d'erreur

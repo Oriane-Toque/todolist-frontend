@@ -42,7 +42,7 @@ const task = {
 
     // on veut spécifier que les données sont en json :
     // pour se faire on prépare les entetes HTTP (headers) de la requête
-    const httpHeaders = new Headers();
+    let httpHeaders = new Headers();
     httpHeaders.append("Content-Type", "application/json");
 
     const fetchOptions = {
@@ -59,14 +59,14 @@ const task = {
 
         function (response) {
           // console.log(response);
-          // Si HTTP status code à 201 => OK
+          // Si HTTP status code à 204 => OK
           if (response.status == 204) {
-            console.log('ajout effectué');
+            console.log('modif effectuée');
 
             task.markTaskAsComplete(taskElement);
 
           } else {
-            console.log('L\'ajout a échoué');
+            console.log('modif a échoué');
           }
         }
       )
