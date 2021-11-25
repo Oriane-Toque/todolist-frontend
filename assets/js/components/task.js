@@ -28,6 +28,10 @@ const task = {
     // je cible le bouton pour archiver une tâche
     const taskArchiveButtonElement = taskElement.querySelector('.task__button--archive');
     taskArchiveButtonElement.addEventListener('click', task.handleArchiveTask);
+    //-------------------------------
+    // je cible le bouton pour désarchiver une tâche
+    const taskDesarchiveButtonElement = taskElement.querySelector('.task__button--desarchive');
+    taskDesarchiveButtonElement.addEventListener('click', task.handleDesarchiveTask);
   },
 
 
@@ -167,6 +171,55 @@ const task = {
 
             // méthode qui affiche la tache comme étant archivée
             task.updateClassStatusTask(taskElement, 2);
+          } else {
+            console.log('ERROR ECHEC MAJ');
+          }
+        }
+      )
+  },
+
+  /**
+   * Méthode qui désarchive une tâche
+   * 
+   * @param {*} evt 
+   */
+  handleDesarchiveTask: function(evt) {
+    console.log("desarchive");
+    // je récupère mon élément lié à l'évènement
+    const taskDesarchiveButtonElement = evt.currentTarget;
+    // je remonte et récupère ma tâche
+    const taskElement = taskDesarchiveButtonElement.closest('.task');
+    // je récupère l'id de la tache
+    const taskId = taskElement.dataset.id;
+
+    // MAJ statut de la tâche dans la bdd
+    const taskData = {
+      status: 1
+    };
+
+    // on prépare les entetes de la requete http
+    // on spécifie que les données sont au format json
+    httpHeaders = new Headers();
+    httpHeaders.append("Content-Type", "application/json");
+
+    // on prépare les options de la requete
+    fetchOptions = {
+      method: 'PATCH',
+      mode: 'cors',
+      cache: 'no-cache',
+      headers: httpHeaders,
+      body: JSON.stringify(taskData)
+    };
+
+    // on envoie la requete via fetch
+    fetch(app.apiRootUrl + '/tasks/' + taskId, fetchOptions)
+      .then(
+        function(response) {
+          if(response.status == 204) {
+            console.log('MAJ status task ok');
+
+            // méthode qui affiche la tache comme étant désarchivée
+            task.updateClassStatusTask(taskElement, 1);
           } else {
             console.log('ERROR ECHEC MAJ');
           }
