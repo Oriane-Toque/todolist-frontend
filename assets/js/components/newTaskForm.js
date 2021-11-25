@@ -110,8 +110,6 @@ const newTaskForm = {
       app.deleteErrorMessage(newTaskFormElement, errorAddTask);
 
       newTaskForm.sendNewTaskFromAPI(newTaskTitle, newTaskCategoryId, newTaskCategoryName);
-
-      tasksList.insertTaskIntoTasksList(newTaskElement);
     }
     // sinon message d'erreur
     else {

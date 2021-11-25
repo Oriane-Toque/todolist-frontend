@@ -74,7 +74,6 @@ const tasksList = {
     const tasksListElement = document.querySelector('.tasks');
     // et j'ajoute la nouvelle tache
     tasksListElement.prepend(taskElement);
-
   }
 
 
