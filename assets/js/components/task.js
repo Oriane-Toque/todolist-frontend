@@ -32,6 +32,10 @@ const task = {
     // je cible le bouton pour désarchiver une tâche
     const taskDesarchiveButtonElement = taskElement.querySelector('.task__button--desarchive');
     taskDesarchiveButtonElement.addEventListener('click', task.handleDesarchiveTask);
+    //-------------------------------
+    // je cible le bouton pour supprimer une tâche
+    const taskDeleteButtonElement = taskElement.querySelector('.task__button--delete');
+    taskDeleteButtonElement.addEventListener('click', task.handleDeleteTask);
   },
 
 
@@ -227,6 +231,43 @@ const task = {
       )
   },
 
+  handleDeleteTask: function(evt) {
+    console.log("delete");
+    // je récupère mon élément lié à l'évènement
+    const taskDeleteButtonElement = evt.currentTarget;
+    // je remonte et récupère ma tâche
+    const taskElement = taskDeleteButtonElement.closest('.task');
+    // je récupère l'id de la tache
+    const taskId = taskElement.dataset.id;
+    // on prépare les entetes de la requete http
+    // on spécifie que les données sont au format json
+    httpHeaders = new Headers();
+    httpHeaders.append("Content-Type", "application/json");
+    
+    // on prépare les options de la requete
+    fetchOptions = {
+    method: 'DELETE',
+    mode: 'cors',
+    cache: 'no-cache',
+    headers: httpHeaders
+    };
+    
+    // on envoie la requete via fetch
+    fetch(app.apiRootUrl + '/tasks/' + taskId, fetchOptions)
+      .then(
+        function(response) {
+          if(response.status == 204) {
+            console.log('MAJ status task ok');
+    
+            // méthode qui supprime
+            task.deleteTaskElement(taskElement);
+          } else {
+            console.log('ERROR ECHEC MAJ');
+          }
+        }
+      )
+  },
+
   /**
    * Méthode qui change la classe si validation de la tâche
    * 
@@ -393,6 +434,16 @@ const task = {
 
     return newTaskElement;
 
+  },
+
+  /**
+   * Méthode qui supprime une tâche
+   * 
+   * @param {*} taskElement 
+   */
+  deleteTaskElement: function(taskElement) {
+
+    taskElement.remove();
   },
 
   /**
