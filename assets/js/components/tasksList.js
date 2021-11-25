@@ -33,7 +33,6 @@ const tasksList = {
       )
       .then(
         function(objectTasksList) {
-          // console.log(objectTasksList);
 
           for(const singleTask of objectTasksList){
 
@@ -60,10 +59,8 @@ const tasksList = {
        // qui va nous servir a ajouter tous les écouteurs d'évents sur UNE TACHE
        task.bindSingleTaskEventListener(taskElement);
      }
-     
-
   },
-  // ajouter une tache a la liste des tache
+
   /**
    * Insère une nouvelle tâche dans le DOM
    * 

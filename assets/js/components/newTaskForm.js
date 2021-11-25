@@ -13,7 +13,6 @@ const newTaskForm = {
     const newTaskFormElement = document.querySelector('.task--add form');
 
     newTaskFormElement.addEventListener('submit', newTaskForm.handleNewTaskFormSubmit);
-
   },
 
   /**
@@ -24,14 +23,14 @@ const newTaskForm = {
    * @param {*} newTaskCategoryName 
    */
   sendNewTaskFromAPI: function(newTaskTitle, newTaskCategoryId, newTaskCategoryName) {
-    // TODO on va faire un fetch vers /tasks en POST pour AJOUTER
-    // la nouvelle tâche à la BDD
 
+    // la nouvelle tâche à la BDD
     // on prépare les données de la nouvelle tâche
     const newTaskData = {
       title: newTaskTitle,
       categoryId: newTaskCategoryId
     };
+
     // on spécifie que les données sont en JSON
     let httpHeaders = new Headers();
     httpHeaders.append("Content-Type", "application/json");
@@ -48,12 +47,8 @@ const newTaskForm = {
     fetch(app.apiRootUrl + '/tasks', fetchOptions)
       .then(
         function(response) {
-
           // Si HTTP status code à 201 => OK
           if (response.status !== 201) {
-            console.log('error');
-
-            // todo
 
           } 
 
@@ -128,12 +123,9 @@ const newTaskForm = {
   checkAddNewTask: function (newTaskTitle) {
 
     if (newTaskTitle === "") {
-      console.log(false);
       return false;
     } else {
-      console.log(true);
       return true;
     }
   }
-
 }

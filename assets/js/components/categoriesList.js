@@ -1,7 +1,6 @@
 const categoriesList = {
 
   init: function () {
-
     categoriesList.loadCategoriesFromAPI();
   },
 
@@ -19,7 +18,6 @@ const categoriesList = {
 
     fetch(app.apiRootUrl + '/categories', fetchOptions)
       .then(
-
         function (categoriesListJson) {
           // conversion de la reponse categoriesListJson
           objectCategoriesList = categoriesListJson.json();
@@ -27,13 +25,11 @@ const categoriesList = {
         }
       )
       .then(
-
         function (objectCategoriesList) {
           // console.log(objectCategoriesList);
 
           // génère un select contenant la liste des catégories
           categoriesList.displayCategoriesList(objectCategoriesList);
-
         }
       )
   },
@@ -84,7 +80,6 @@ const categoriesList = {
       // puis j'ajoute à chaque tour de boucle option à son parent select
       elementSelectList.appendChild(elementOptionList);
     }
-    // console.log(elementSelectList);
     return elementSelectList;
   }
 }

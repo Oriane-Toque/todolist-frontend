@@ -1,99 +1,133 @@
 const task = {
-
   /**
    * Méthode qui pose tous les écouteurs d'évènements sur un élément tâche
-   * 
-   * @param {*} taskElement 
+   *
+   * @param {*} taskElement
    */
   bindSingleTaskEventListener: function (taskElement) {
     // je cible le titre de la tache :
-    const taskTitleLabelElement = taskElement.querySelector('.task__title-label');
-    taskTitleLabelElement.addEventListener('click', task.handleClickOnTask);
+    const taskTitleLabelElement =
+      taskElement.querySelector(".task__title-label");
+    taskTitleLabelElement.addEventListener("click", task.handleEditTask);
+    // je cible le bouton de modification d'une tâche
+    const taskEditButtonElement = taskElement.querySelector(
+      ".task__button--modify"
+    );
+    taskEditButtonElement.addEventListener("click", task.handleEditTask);
 
     // on cible l'input
-    const taskTitleFieldElement = taskElement.querySelector('.task__title-field');
+    const taskTitleFieldElement =
+      taskElement.querySelector(".task__title-field");
     // On ajoute l'écoute de la saisie d'une touche clavier
-    taskTitleFieldElement.addEventListener('keydown', task.handleKeyDown);
-    taskTitleFieldElement.addEventListener('blur', task.handleValidateNewTask);
+    taskTitleFieldElement.addEventListener("keydown", task.handleKeyDown);
+    taskTitleFieldElement.addEventListener("blur", task.handleValidateNewTask);
 
     //-------------------------------
-    // je cible le bouton de validation de la tache 
-    const completeButtonElement = taskElement.querySelector('.task__button--validate');
-    completeButtonElement.addEventListener('click', task.handleCompleteTask);
+    // je cible le bouton de validation de la tache
+    const completeButtonElement = taskElement.querySelector(
+      ".task__button--validate"
+    );
+    completeButtonElement.addEventListener("click", task.handleCompleteTask);
     //-------------------------------
     // je cible le bouton pour marquer une tâche comme incomplète
-    const taskIncompleteButtonElement = taskElement.querySelector('.task__button--incomplete');
-    taskIncompleteButtonElement.addEventListener('click', task.handleIncompleteTask);
+    const taskIncompleteButtonElement = taskElement.querySelector(
+      ".task__button--incomplete"
+    );
+    taskIncompleteButtonElement.addEventListener(
+      "click",
+      task.handleIncompleteTask
+    );
     //-------------------------------
     // je cible le bouton pour archiver une tâche
-    const taskArchiveButtonElement = taskElement.querySelector('.task__button--archive');
-    taskArchiveButtonElement.addEventListener('click', task.handleArchiveTask);
+    const taskArchiveButtonElement = taskElement.querySelector(
+      ".task__button--archive"
+    );
+    taskArchiveButtonElement.addEventListener("click", task.handleArchiveTask);
     //-------------------------------
     // je cible le bouton pour désarchiver une tâche
-    const taskDesarchiveButtonElement = taskElement.querySelector('.task__button--desarchive');
-    taskDesarchiveButtonElement.addEventListener('click', task.handleDesarchiveTask);
+    const taskDesarchiveButtonElement = taskElement.querySelector(
+      ".task__button--desarchive"
+    );
+    taskDesarchiveButtonElement.addEventListener(
+      "click",
+      task.handleDesarchiveTask
+    );
     //-------------------------------
     // je cible le bouton pour supprimer une tâche
-    const taskDeleteButtonElement = taskElement.querySelector('.task__button--delete');
-    taskDeleteButtonElement.addEventListener('click', task.handleDeleteTask);
+    const taskDeleteButtonElement = taskElement.querySelector(
+      ".task__button--delete"
+    );
+    taskDeleteButtonElement.addEventListener("click", task.handleDeleteTask);
   },
-
 
   /**
    * Méthode qui modifie l'avancement de la tâche dans la BDD
    * Methode PATCH
-   * 
-   * @param {*} taskElement 
+   *
+   * @param {*} taskElement
    */
-  sendDataCompletionFromAPIPatch: function (taskElement, taskId, taskData, completionMethod, completion) {
-
+  sendDataCompletionFromAPIPatch: function (
+    taskElement,
+    taskId,
+    taskData,
+    completionMethod,
+    completion
+  ) {
     // on veut spécifier que les données sont en json :
     // pour se faire on prépare les entetes HTTP (headers) de la requête
     let httpHeaders = new Headers();
     httpHeaders.append("Content-Type", "application/json");
 
     const fetchOptions = {
-      method: 'PATCH',
-      mode: 'cors',
-      cache: 'no-cache',
+      method: "PATCH",
+      mode: "cors",
+      cache: "no-cache",
       headers: httpHeaders,
-      body: JSON.stringify(taskData)
+      body: JSON.stringify(taskData),
     };
 
     // Exécuter la requête HTTP avec FETCH
-    fetch(app.apiRootUrl + '/tasks/' + taskId, fetchOptions)
-      .then(
+    fetch(app.apiRootUrl + "/tasks/" + taskId, fetchOptions).then(function (
+      response
+    ) {
+      // Si HTTP status code à 204 => OK
+      if (response.status == 204) {
+        task.updateCompletionTask(taskElement, completion);
+      }
+    });
+  },
 
-        function (response) {
-          // console.log(response);
-          // Si HTTP status code à 204 => OK
-          if (response.status == 204) {
-            console.log('maj effectuée');
+  /**
+   * Méthode qui masque le paragraphe de la tache et affiche l'input
+   * Activation du mode d'édition
+   *
+   * @param {*} evt
+   */
+  handleEditTask: function (evt) {
+    // ici je remonte a l'élément qui a capté l'event, c'est a dire le <p> (l'intitulé de la tache)
+    const taskTitleLabelElement = evt.currentTarget;
+    // ici je remonte a la div de classe task
+    const taskElement = taskTitleLabelElement.closest(".task");
+    // j'ajoute la classe task--edit qui me permet de masquer le <p> qui contient l'intitulé de la tache
+    // et afficher l'input
+    taskElement.classList.add("task--edit");
 
-            completionMethod;
-
-            task.updateCompletionTask(taskElement, completion);
-
-          } else {
-            console.log('echec maj');
-          }
-        }
-      )
+    // ci dessous je met le focus sur l'input de la tache
+    taskElement.querySelector(".task__title-field").focus();
   },
 
   /**
    * Méthode qui valide la tâche
    * Completion à 100
-   * 
-   * @param {*} evt 
+   *
+   * @param {*} evt
    */
   //! Modification de la méthode en e07
   handleCompleteTask: function (evt) {
-    //alert('valider');
     // je cible le bouton sur lequel l'utilisateur a click
     const completeButtonElement = evt.currentTarget;
     // ici je cible la div de class task qui contient le bouton
-    const taskElement = completeButtonElement.closest('.task');
+    const taskElement = completeButtonElement.closest(".task");
 
     // récupération de l'id task
     const taskId = taskElement.dataset.id;
@@ -101,25 +135,30 @@ const task = {
 
     // on stocke les données à transférer
     const taskData = {
-      completion: 100
+      completion: 100,
     };
 
     //! ici récupération id + MAJ + stockage données
-    task.sendDataCompletionFromAPIPatch(taskElement, taskId, taskData, task.markTaskAsComplete(taskElement), 100);
+    task.sendDataCompletionFromAPIPatch(
+      taskElement,
+      taskId,
+      taskData,
+      task.markTaskAsComplete(taskElement),
+      100
+    );
   },
 
   /**
    * Méthode qui invalide la tâche
    * Completion à 0
-   * 
-   * @param {*} evt 
+   *
+   * @param {*} evt
    */
   handleIncompleteTask: function (evt) {
-
     // récupération du bouton à l'origine de l'évènement
     const taskIncompleteButtonElement = evt.currentTarget;
     // je remonte à l'élément tache
-    const taskElement = taskIncompleteButtonElement.closest('.task');
+    const taskElement = taskIncompleteButtonElement.closest(".task");
     // récupération de l'id de la tâche
     const taskId = taskElement.dataset.id;
 
@@ -127,29 +166,36 @@ const task = {
 
     // on stocke les données à transférer
     const taskData = {
-      completion: 0
+      completion: 0,
     };
 
-    task.sendDataCompletionFromAPIPatch(taskElement, taskId, taskData, task.markTaskAsIncomplete(taskElement), 0);
+    task.sendDataCompletionFromAPIPatch(
+      taskElement,
+      taskId,
+      taskData,
+      task.markTaskAsIncomplete(taskElement),
+      0
+    );
   },
 
   /**
    * Méthode qui archive une tâche
-   * 
-   * @param {*} evt 
+   *
+   * @param {*} evt
    */
-  handleArchiveTask: function(evt) {
-
+  handleArchiveTask: function (evt) {
+    console.log("archive");
     // je récupère mon élément lié à l'évènement
     const taskArchiveButtonElement = evt.currentTarget;
     // je remonte et récupère ma tâche
-    const taskElement = taskArchiveButtonElement.closest('.task');
+    const taskElement = taskArchiveButtonElement.closest(".task");
     // je récupère l'id de la tache
     const taskId = taskElement.dataset.id;
 
     // MAJ statut de la tâche dans la bdd
     const taskData = {
-      status: 2
+      status: 2,
+      completion: 100
     };
 
     // on prépare les entetes de la requete http
@@ -159,46 +205,43 @@ const task = {
 
     // on prépare les options de la requete
     fetchOptions = {
-      method: 'PATCH',
-      mode: 'cors',
-      cache: 'no-cache',
+      method: "PATCH",
+      mode: "cors",
+      cache: "no-cache",
       headers: httpHeaders,
-      body: JSON.stringify(taskData)
+      body: JSON.stringify(taskData),
     };
 
     // on envoie la requete via fetch
-    fetch(app.apiRootUrl + '/tasks/' + taskId, fetchOptions)
-      .then(
-        function(response) {
-          if(response.status == 204) {
-            console.log('MAJ status task ok');
-
-            // méthode qui affiche la tache comme étant archivée
-            task.updateClassStatusTask(taskElement, 2);
-          } else {
-            console.log('ERROR ECHEC MAJ');
-          }
-        }
-      )
+    fetch(app.apiRootUrl + "/tasks/" + taskId, fetchOptions).then(function (
+      response
+    ) {
+      if (response.status == 204) {
+        // méthode qui affiche la tache comme étant archivée
+        task.updateClassStatusTask(taskElement, 2);
+        task.updateClassCompletionTask(taskElement, 100);
+        task.updateCompletionTask(taskElement, 100);
+      }
+    });
   },
 
   /**
    * Méthode qui désarchive une tâche
-   * 
-   * @param {*} evt 
+   *
+   * @param {*} evt
    */
-  handleDesarchiveTask: function(evt) {
-    console.log("desarchive");
+  handleDesarchiveTask: function (evt) {
     // je récupère mon élément lié à l'évènement
     const taskDesarchiveButtonElement = evt.currentTarget;
     // je remonte et récupère ma tâche
-    const taskElement = taskDesarchiveButtonElement.closest('.task');
+    const taskElement = taskDesarchiveButtonElement.closest(".task");
     // je récupère l'id de la tache
     const taskId = taskElement.dataset.id;
 
     // MAJ statut de la tâche dans la bdd
     const taskData = {
-      status: 1
+      status: 1,
+      completion: 0
     };
 
     // on prépare les entetes de la requete http
@@ -208,105 +251,60 @@ const task = {
 
     // on prépare les options de la requete
     fetchOptions = {
-      method: 'PATCH',
-      mode: 'cors',
-      cache: 'no-cache',
+      method: "PATCH",
+      mode: "cors",
+      cache: "no-cache",
       headers: httpHeaders,
-      body: JSON.stringify(taskData)
+      body: JSON.stringify(taskData),
     };
 
     // on envoie la requete via fetch
-    fetch(app.apiRootUrl + '/tasks/' + taskId, fetchOptions)
-      .then(
-        function(response) {
-          if(response.status == 204) {
-            console.log('MAJ status task ok');
-
-            // méthode qui affiche la tache comme étant désarchivée
-            task.updateClassStatusTask(taskElement, 1);
-          } else {
-            console.log('ERROR ECHEC MAJ');
-          }
-        }
-      )
+    fetch(app.apiRootUrl + "/tasks/" + taskId, fetchOptions).then(function (
+      response
+    ) {
+      if (response.status == 204) {
+        // méthode qui affiche la tache comme étant désarchivée
+        task.updateClassStatusTask(taskElement, 1);
+        task.updateClassCompletionTask(taskElement, 0);
+        task.updateCompletionTask(taskElement, 0);
+      }
+    });
   },
 
-  handleDeleteTask: function(evt) {
-    console.log("delete");
+  /**
+   * Méthode qui supprime une tâche
+   *
+   * @param {*} evt
+   */
+  handleDeleteTask: function (evt) {
     // je récupère mon élément lié à l'évènement
     const taskDeleteButtonElement = evt.currentTarget;
     // je remonte et récupère ma tâche
-    const taskElement = taskDeleteButtonElement.closest('.task');
+    const taskElement = taskDeleteButtonElement.closest(".task");
     // je récupère l'id de la tache
     const taskId = taskElement.dataset.id;
     // on prépare les entetes de la requete http
     // on spécifie que les données sont au format json
     httpHeaders = new Headers();
     httpHeaders.append("Content-Type", "application/json");
-    
+
     // on prépare les options de la requete
     fetchOptions = {
-    method: 'DELETE',
-    mode: 'cors',
-    cache: 'no-cache',
-    headers: httpHeaders
+      method: "DELETE",
+      mode: "cors",
+      cache: "no-cache",
+      headers: httpHeaders,
     };
-    
+
     // on envoie la requete via fetch
-    fetch(app.apiRootUrl + '/tasks/' + taskId, fetchOptions)
-      .then(
-        function(response) {
-          if(response.status == 204) {
-            console.log('MAJ status task ok');
-    
-            // méthode qui supprime
-            task.deleteTaskElement(taskElement);
-          } else {
-            console.log('ERROR ECHEC MAJ');
-          }
-        }
-      )
-  },
-
-  /**
-   * Méthode qui change la classe si validation de la tâche
-   * 
-   * @param {*} taskElement 
-   */
-  markTaskAsComplete: function (taskElement) {
-    taskElement.classList.remove('task--todo');
-    taskElement.classList.add('task--complete');
-  },
-  // Cette methode a pour objectif de masquer le p de la tache et afficher l'input
-
-  /**
-   * Méthode qui change la classe si finalement la tache n'est pas complete
-   * 
-   * @param {*} taskElement 
-   */
-  markTaskAsIncomplete: function (taskElement) {
-    taskElement.classList.remove('task--complete');
-    taskElement.classList.add('task--todo');
-  },
-
-  /**
-   * Méthode qui masque le paragraphe de la tache et affiche l'input
-   * Activation du mode d'édition
-   * 
-   * @param {*} evt 
-   */
-  handleClickOnTask: function (evt) {
-    // ici je remonte a l'élément qui a capté l'event, c'est a dire le <p> (l'intitulé de la tache)
-    const taskTitleLabelElement = evt.currentTarget;
-    // ici je remonte a la div de classe task
-    const taskElement = taskTitleLabelElement.closest('.task');
-    // j'ajoute la classe task--edit qui me permet de masquer le <p> qui contient l'intitulé de la tache
-    // et afficher l'input 
-    taskElement.classList.add('task--edit');
-
-    // ci dessous je met le focus sur l'input de la tache
-    taskElement.querySelector('.task__title-field').focus();
-
+    fetch(app.apiRootUrl + "/tasks/" + taskId, fetchOptions).then(function (
+      response
+    ) {
+      if (response.status == 204) {
+        // méthode qui supprime
+        task.deleteTaskElement(taskElement);
+      }
+    });
   },
 
   /**
@@ -314,11 +312,11 @@ const task = {
    * handleValidateNewTask mais dans le cas ou
    * l'utilisateur appui sur la touche enter
    * pour confirmer la modification de la tâche
-   * 
-   * @param {*} evt 
+   *
+   * @param {*} evt
    */
   handleKeyDown: function (evt) {
-    if (evt.key === 'Enter') {
+    if (evt.key === "Enter") {
       // ATTENTION DELICAT
       // ici je passe l'objet Event "evt" a la methode
       // handleValidateNewTask pour que le mecanisme reste fonctionnel
@@ -330,8 +328,8 @@ const task = {
    * Méthode qui intègre la modification de la tâche
    * et sort du mode d'édition quand on clique
    * à l'extérieur du champs
-   * 
-   * @param {*} evt 
+   *
+   * @param {*} evt
    */
   handleValidateNewTask: function (evt) {
     // on récupère l'input
@@ -341,14 +339,14 @@ const task = {
     const newTaskTitle = taskTitleFieldElement.value;
 
     // on remonte a la div de classe task
-    const taskElement = taskTitleFieldElement.closest('.task');
+    const taskElement = taskTitleFieldElement.closest(".task");
 
     // récupération de l'id de la tâche
     const taskId = taskElement.dataset.id;
 
     // MAJ - requete http à l'api
     const taskData = {
-      title: newTaskTitle
+      title: newTaskTitle,
     };
 
     // on prépare les entetes http de la requete
@@ -358,58 +356,66 @@ const task = {
 
     // je spécifie les options de ma requete
     fetchOptions = {
-      method: 'PATCH',
-      mode: 'cors',
-      cache: 'no-cache',
+      method: "PATCH",
+      mode: "cors",
+      cache: "no-cache",
       headers: httpHeaders,
-      body: JSON.stringify(taskData)
+      body: JSON.stringify(taskData),
     };
 
     // j'envoie ma requete à mon api
-    fetch(app.apiRootUrl + '/tasks/' + taskId, fetchOptions)
-      .then(
-        function (response) {
-          if (response.status == 204) {
-            console.log('MAJ titre tache dans la bdd effectuée');
-            // je cible le <p> a partir de l'input
-            const taskTitleLabelElement = taskTitleFieldElement.previousElementSibling;
+    fetch(app.apiRootUrl + "/tasks/" + taskId, fetchOptions)
+      .then(function (response) {
+        if (response.status == 204) {
+          // je cible le <p> a partir de l'input
+          const taskTitleLabelElement =
+            taskTitleFieldElement.previousElementSibling;
 
-            // je change son contenu texte par le contenu de l'input
-            taskTitleLabelElement.textContent = newTaskTitle;
+          // je change son contenu texte par le contenu de l'input
+          taskTitleLabelElement.textContent = newTaskTitle;
 
-            // je supprime la classe task--edit
-            taskElement.classList.remove('task--edit');
-          } else {
-            console.log('ERROR ECHEC MAJ');
-          }
+          // je supprime la classe task--edit
+          taskElement.classList.remove("task--edit");
         }
-      )
+      });
+  },
+
+  /**
+   * Méthode qui change la classe si validation de la tâche
+   *
+   * @param {*} taskElement
+   */
+  markTaskAsComplete: function (taskElement) {
+    taskElement.classList.remove("task--todo");
+    taskElement.classList.add("task--complete");
+  },
+
+  /**
+   * Méthode qui change la classe si finalement la tache n'est pas complete
+   *
+   * @param {*} taskElement
+   */
+  markTaskAsIncomplete: function (taskElement) {
+    taskElement.classList.remove("task--complete");
+    taskElement.classList.add("task--todo");
   },
 
   /**
    * Méthode qui crée une nouvelle tâche
-   * 
-   * @param {*} newTaskTitle 
-   * @param {*} newTaskCategoryName 
-   * @returns 
+   *
+   * @param {*} newTaskTitle
+   * @param {*} newTaskCategoryName
+   * @returns
    */
   createTaskElement: function (newTaskId, newTaskTitle, newTaskCategoryName, newTaskCompletion = 0, newTaskStatus) {
-
     // je cible le template
-    const templateElement = document.querySelector('#task-template');
+    const templateElement = document.querySelector("#task-template");
     // puis je le clone et je réceptione le clone dans taskCloneElement
     const taskCloneElement = templateElement.content.cloneNode(true);
     // L'élement "task" est le premier element du fragment de document
     // je vais donc le cibler.
     // j'aurais pu également faire :
-    const newTaskElement = taskCloneElement.querySelector('.task');
-    //const newTaskElement = taskCloneElement.firstElementChild;
-    console.log(newTaskElement);
-    /*
-    le templateTaskElement.content donne accès à un fragment de document qui est une sorte de container "emballant" le contenu (le fragment de document est un morceau de document qui ne fait pas partie du DOM), donc on n'obtient pas directement l'élément task (le <div> avec la classe .task sur l'exemple)
-    et si on écrit : let newTaskElement = templateTaskElement.content.cloneNode(true); on retourne également un fragment de document
-    cette subtilité est importante car si l'on veut réellement accéder à l'élément tâche contenu dans le fragment (et modifier un de ses attribut, pour mettre à jour le nom de la catégorie en dataset par exemple), alors il faut faire une sélection supplémentaire sur le fragment que l'on vient de récupérer : newTaskElement.querySelector('.task').
-    */
+    const newTaskElement = taskCloneElement.querySelector(".task");
 
     task.updateTaskId(newTaskElement, newTaskId);
 
@@ -430,19 +436,15 @@ const task = {
     // ici j'utilise une methode qui va nous permettre d'ajouter tous les écouteurs d'events sur UNE TACHE
     task.bindSingleTaskEventListener(newTaskElement);
 
-    // console.log(taskElement);
-
     return newTaskElement;
-
   },
 
   /**
-   * Méthode qui supprime une tâche
-   * 
-   * @param {*} taskElement 
+   * Méthode qui supprime une tâche dans le DOM
+   *
+   * @param {*} taskElement
    */
-  deleteTaskElement: function(taskElement) {
-
+  deleteTaskElement: function (taskElement) {
     taskElement.remove();
   },
 
@@ -450,59 +452,56 @@ const task = {
    * Méthode qui ajoute l'id de la task
    */
   updateTaskId: function (taskElement, taskId) {
-
     taskElement.dataset.id = taskId;
   },
 
   /**
    * Méthode qui ajoute la catégorie à une tâche
-   * 
-   * @param {*} taskElement 
-   * @param {*} categoryTitle 
+   *
+   * @param {*} taskElement
+   * @param {*} categoryTitle
    */
   updateTaskCategoryName: function (taskElement, categoryTitle) {
     // Mise a jour du dataset de la div de classe task
     taskElement.dataset.category = categoryTitle;
     // je cible le p enfant direct d'un element de classe task__category
-    const taskCategoryNameElement = taskElement.querySelector('.task__category > p');
+    const taskCategoryNameElement = taskElement.querySelector(
+      ".task__category > p"
+    );
     taskCategoryNameElement.textContent = categoryTitle;
   },
 
   /**
    * Méthode qui ajoute le titre à une tâche
-   * 
-   * @param {*} taskElement 
-   * @param {*} taskTitle 
+   *
+   * @param {*} taskElement
+   * @param {*} taskTitle
    */
   updateTaskTitle: function (taskElement, taskTitle) {
     // je cible le p contenant le titre de la tâche
-    const tasktitleElement = taskElement.querySelector('.task__title-label');
+    const tasktitleElement = taskElement.querySelector(".task__title-label");
     // mise a jour de sa valeur
     tasktitleElement.textContent = taskTitle;
     // je cible l'input de la tache
-    const taskTitleFieldElement = taskElement.querySelector('.task__title-field');
+    const taskTitleFieldElement = taskElement.querySelector(".task__title-field");
     // mise a jour de sa valeur :
     taskTitleFieldElement.value = taskTitle;
-
-
-
   },
 
   /**
    * Méthode qui ajoute la classe todo ou complete
    * si la tâche est toujours en cours ou si elle
    * est finie
-   * 
-   * @param {*} completion 
-   * @param {*} taskElement 
-   * @returns 
+   *
+   * @param {*} completion
+   * @param {*} taskElement
+   * @returns
    */
   updateClassCompletionTask: function (taskElement, completion) {
-
     if (completion < 100 && completion >= 0) {
-      taskElement.classList.replace('task--complete', 'task--todo');
+      taskElement.classList.replace("task--complete", "task--todo");
     } else {
-      taskElement.classList.replace('task--todo', 'task--complete');
+      taskElement.classList.replace("task--todo", "task--complete");
     }
 
     return taskElement;
@@ -510,34 +509,34 @@ const task = {
 
   /**
    * Méthode qui modifie une tâche si elle est archivée
-   * 
-   * @param {*} taskElement 
-   * @param {*} status 
+   *
+   * @param {*} taskElement
+   * @param {*} status
    */
-  updateClassStatusTask: function(taskElement, status) {
-
-    if(status === 2) {
-      taskElement.classList.replace('task--todo','task--archive');
-      taskElement.classList.replace('task--complete','task--archive');
+  updateClassStatusTask: function (taskElement, status) {
+    if (status === 2) {
+      taskElement.classList.replace("task--todo", "task--archive");
+      taskElement.classList.replace("task--complete", "task--archive");
     } else {
-      taskElement.classList.remove('task--archive');
+      taskElement.classList.remove("task--archive");
+      taskElement.classList.add("task--todo");
     }
   },
 
   /**
    * Méthode qui ajoute l'état d'avancement d'une tâche
-   * 
-   * @param {*} completion 
-   * @param {*} taskElement 
+   *
+   * @param {*} completion
+   * @param {*} taskElement
    */
   updateCompletionTask: function (taskElement, completion) {
 
-    // console.log(completion);
     // je cible la barre de progression
-    const progressTaskElement = taskElement.querySelector('.progress-bar__level');
+    const progressTaskElement = taskElement.querySelector(
+      ".progress-bar__level"
+    );
 
     // je change le style pour afficher l'avancement dans le DOM
-    progressTaskElement.setAttribute('style', 'width:' + completion + '%');
-  }
-
-}
+    progressTaskElement.setAttribute("style", "width:" + completion + "%");
+  },
+};
