@@ -1,6 +1,6 @@
 const app = {
 
-  apiRootUrl: 'http://0.0.0.0:8080',
+  apiRootUrl: 'http://0.0.0.0:8000',
 
   init: function () {
     console.log('app.init executé');

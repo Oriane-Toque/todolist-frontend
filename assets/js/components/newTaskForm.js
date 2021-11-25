@@ -32,7 +32,6 @@ const newTaskForm = {
       title: newTaskTitle,
       categoryId: newTaskCategoryId
     };
-
     // on spécifie que les données sont en JSON
     let httpHeaders = new Headers();
     httpHeaders.append("Content-Type", "application/json");
@@ -64,12 +63,10 @@ const newTaskForm = {
       .then(
         function(newTaskObject) {
           
-          // console.log(newTaskObject);
           // j'imagine une methode qui va nous permettre de créer une nouvelle tache
-          // cette methode va recevoir 2 arguments : le nom de la tache et le nom de la categorie
           const newTaskElement = task.createTaskElement(newTaskObject.id, newTaskObject.title, newTaskCategoryName, newTaskObject.completion);
 
-          // j'imagine une methode dont le but sera de nous afficher la tache ( l'inserer dans la lsite des taches);
+          // j'imagine une methode dont le but sera de nous afficher la tache ( l'inserer dans la liste des taches);
           tasksList.insertTaskIntoTasksList(newTaskElement);
         }
       )
@@ -118,13 +115,10 @@ const newTaskForm = {
     }
     // sinon message d'erreur
     else {
-
       const errorMessage = "Veuillez indiquer le titre de la tâche";
       // génère et affiche un message d'erreur
       app.addErrorMessage(newTaskFormElement, errorMessage);
-
     }
-
   },
 
   /**
