@@ -1,6 +1,6 @@
 const app = {
 
-  apiRootUrl: "http://todoapp-rest.herokuapp.com",
+  apiRootUrl: "127.0.0.1:8000",
 
   init: function () {
     tasksList.init();
